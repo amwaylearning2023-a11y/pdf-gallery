@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nutrition W.I.S.E Programme – Module Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --glass: rgba(255,255,255,.12);
+    --glass-strong: rgba(255,255,255,.2);
+    --stroke: rgba(255,255,255,.28);
+    --text: #fff;
+    --muted: rgba(255,255,255,.72);
+    --accent: #7dd3fc;
+    --accent2: #c4b5fd;
+    --radius: 22px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{min-height:100%;background:#1e1b4b}
+  body{min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#0e7490 100%)}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--text);
+    background:transparent;overflow-x:hidden;
+  }
+  /* floating colour blobs behind the glass */
+  .blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.55;z-index:0;animation:float 18s ease-in-out infinite}
+  .b1{width:420px;height:420px;background:#ec4899;top:-120px;left:-100px}
+  .b2{width:480px;height:480px;background:#06b6d4;bottom:-160px;right:-120px;animation-delay:-6s}
+  .b3{width:320px;height:320px;background:#a855f7;top:40%;left:55%;animation-delay:-12s}
+  @keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.08)}}
+
+  .glass{
+    background:var(--glass);border:1px solid var(--stroke);border-radius:var(--radius);
+    backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
+    box-shadow:0 8px 32px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:32px 20px 60px}
+
+  header.glass{padding:30px 32px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+  h1{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-.5px}
+  h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);margin-top:6px;font-size:15px}
+  .stat{padding:12px 20px;border-radius:16px;background:var(--glass-strong);border:1px solid var(--stroke);text-align:center;min-width:110px}
+  .stat b{display:block;font-size:26px}
+  .stat small{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+
+  .toolbar{margin-top:20px;padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .search{flex:1 1 260px;position:relative}
+  .search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);opacity:.7}
+  input,select{
+    width:100%;font:inherit;color:var(--text);background:rgba(255,255,255,.1);
+    border:1px solid var(--stroke);border-radius:14px;padding:12px 16px;outline:none;transition:.2s;
+  }
+  .search input{padding-left:44px}
+  input::placeholder{color:var(--muted)}
+  input:focus,select:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.55)}
+  select{width:auto;cursor:pointer}
+  select option{color:#111}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{
+    font:inherit;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;
+    padding:8px 16px;border-radius:999px;background:var(--glass);border:1px solid var(--stroke);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:.2s;
+  }
+  .chip:hover{background:var(--glass-strong)}
+  .chip.active{background:#fff;color:#312e81;border-color:#fff}
+
+  .grid{margin-top:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px}
+  .card{overflow:hidden;display:flex;flex-direction:column;transition:transform .25s, box-shadow .25s;animation:in .4s ease both}
+  .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.3)}
+  @keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .thumb{position:relative;aspect-ratio:4/3;margin:12px 12px 0;border-radius:14px;overflow:hidden;
+    background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));cursor:pointer;display:grid;place-items:center}
+  .thumb canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s, transform .4s}
+  .thumb canvas.ready{opacity:1}
+  .thumb canvas.ready ~ .num{display:none}
+  .card:hover .thumb canvas{transform:scale(1.05)}
+  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .4s}
+  .card:hover .thumb img{transform:scale(1.05)}
+  .thumb .num{position:absolute;right:14px;bottom:6px;z-index:1;text-shadow:0 2px 12px rgba(0,0,0,.4);font-size:64px;font-weight:800;line-height:1;opacity:.22}
+  .thumb .ph{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-weight:700;font-size:13px}
+  .badge{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;
+    background:rgba(15,12,41,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--stroke)}
+  .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .title{font-weight:700;font-size:15px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .desc{color:var(--muted);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .meta{color:var(--muted);font-size:12px;margin-top:auto;padding-top:6px}
+  .actions{display:flex;gap:8px;margin-top:10px}
+  .btn{
+    flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:13px;font-weight:700;
+    padding:10px 12px;border-radius:12px;cursor:pointer;text-decoration:none;transition:.2s;border:1px solid var(--stroke);
+  }
+  .btn.ghost{background:rgba(255,255,255,.1);color:var(--text)}
+  .btn.ghost:hover{background:rgba(255,255,255,.22)}
+  .btn.solid{background:linear-gradient(135deg,#fff,#e0e7ff);color:#312e81;border-color:transparent}
+  .btn.solid:hover{filter:brightness(1.05);box-shadow:0 6px 18px rgba(255,255,255,.25)}
+
+  .skeleton{height:330px;position:relative;overflow:hidden}
+  .skeleton::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:shine 1.4s infinite}
+  @keyframes shine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+  .empty{grid-column:1/-1;padding:50px;text-align:center;color:var(--muted)}
+  .empty b{display:block;color:var(--text);font-size:18px;margin-bottom:6px}
+
+  /* viewer modal */
+  .modal{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding:20px;
+    background:rgba(10,8,30,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .modal.open{display:flex;animation:fade .2s}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .viewer{width:min(1000px,100%);height:min(90vh,900px);display:flex;flex-direction:column;overflow:hidden}
+  .viewer-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--stroke)}
+  .viewer-head h3{flex:1;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .viewer-head .btn{flex:0 0 auto}
+  .icon-btn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;cursor:pointer;color:#fff;
+    background:rgba(255,255,255,.1);border:1px solid var(--stroke);font-size:20px}
+  .icon-btn:hover{background:rgba(255,255,255,.25)}
+  iframe{flex:1;width:100%;border:0;background:rgba(255,255,255,.95)}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:40px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<div class="wrap">
+  <header class="glass">
+    <div>
+      <h1><span>Nutrition W.I.S.E Programme</span></h1>
+      <p class="sub">Module library · preview or download each module as PDF</p>
+    </div>
+    <div class="stat"><b id="count">–</b><small>Documents</small></div>
+  </header>
+
+  <div class="toolbar glass">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search documents…" autocomplete="off">
+    </div>
+    <select id="sort" aria-label="Sort">
+      <option value="az">Module order (A–Z)</option>
+      <option value="za">Name Z–A</option>
+          </select>
+  </div>
+
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+  <footer>Click <b>View</b> to preview · <b>Download</b> saves the PDF straight to your device</footer>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="viewer glass">
+    <div class="viewer-head">
+      <h3 id="vTitle"></h3>
+      <a class="btn solid" id="vDownload" href="#" download>⬇ Download</a>
+      <button class="icon-btn" id="vClose" aria-label="Close" type="button">✕</button>
+    </div>
+    <iframe id="vFrame" title="PDF preview" allow="autoplay"></iframe>
+  </div>
+</div>
+
+<script>
+  let files = [], activeCat = 'All';
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fileUrl = f => 'pdfs/' + encodeURIComponent(f.file);
+  const size = b => b > 1048576 ? (b/1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b/1024)) + ' KB';
+  const date = t => new Date(t).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+  const pdfIcon = '<div class="ph"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>PDF</div>';
+
+  function skeletons(){ $('grid').innerHTML = Array(8).fill('<div class="glass skeleton"></div>').join(''); }
+
+  function renderChips(){
+    const cats = ['All', ...[...new Set(files.map(f => f.category))].sort()];
+    $('chips').innerHTML = cats.length > 2 ? cats.map(c =>
+      `<button type="button" class="chip ${c === activeCat ? 'active' : ''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('') : '';
+  }
+
+  let multiCat = false;
+  function render(){
+    multiCat = new Set(files.map(f => f.category)).size > 1;
+    const q = $('q').value.trim().toLowerCase(), s = $('sort').value;
+    let list = files.filter(f => (activeCat === 'All' || f.category === activeCat) &&
+      (!q || (f.name + ' ' + f.description + ' ' + f.category).toLowerCase().includes(q)));
+    list.sort((a, b) => s === 'new' ? b.updated - a.updated : s === 'old' ? a.updated - b.updated :
+      s === 'az' ? a.name.localeCompare(b.name, undefined, {numeric:true}) : b.name.localeCompare(a.name, undefined, {numeric:true}));
+    $('count').textContent = list.length;
+    $('grid').innerHTML = list.length ? list.map((f, i) => `
+      <article class="card glass" style="animation-delay:${Math.min(i, 12) * 40}ms">
+        <div class="thumb" data-view="${esc(f.id)}">
+          <canvas data-pdf="${fileUrl(f)}"></canvas><div class="num">${esc(f.num || '')}</div>
+          ${multiCat ? `<span class="badge">${esc(f.category)}</span>` : ''}
+        </div>
+        <div class="body">
+          <div class="title" title="${esc(f.name)}">${esc(f.name)}</div>
+          ${f.description ? `<div class="desc">${esc(f.description)}</div>` : ''}
+          <div class="meta">${f.pages ? f.pages + ' pages · ' : ''}${size(f.size)}</div>
+          <div class="actions">
+            <button type="button" class="btn ghost" data-view="${esc(f.id)}">👁 View</button>
+            <a class="btn solid" href="${fileUrl(f)}" download="${esc(f.file)}">⬇ Download</a>
+          </div>
+        </div>
+      </article>`).join('')
+      : '<div class="empty glass"><b>No documents found</b>Try a different search or category.</div>';
+    drawThumbs();
+  }
+
+  function openViewer(id){
+    const f = files.find(x => x.id === id); if (!f) return;
+    $('vTitle').textContent = f.name;
+    $('vDownload').href = fileUrl(f); $('vDownload').setAttribute('download', f.file);
+    $('vFrame').src = fileUrl(f) + '#view=FitH';
+    $('modal').classList.add('open');
+  }
+  function closeViewer(){ $('modal').classList.remove('open'); $('vFrame').src = 'about:blank'; }
+
+  document.addEventListener('click', e => {
+    const v = e.target.closest('[data-view]'); if (v) { e.preventDefault(); openViewer(v.dataset.view); return; }
+    const c = e.target.closest('[data-cat]'); if (c) { activeCat = c.dataset.cat; renderChips(); render(); }
+  });
+  $('vClose').onclick = closeViewer;
+  $('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeViewer(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeViewer(); });
+  $('q').addEventListener('input', render);
+  $('sort').addEventListener('change', render);
+
+  // first-page previews, rendered in the browser with PDF.js
+  const thumbCache = {};
+  function drawThumbs(){
+    if (!window.pdfjsLib) return;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const io = new IntersectionObserver(entries => entries.forEach(async e => {
+      if (!e.isIntersecting) return; io.unobserve(e.target);
+      const c = e.target, url = c.dataset.pdf;
+      try {
+        if (!thumbCache[url]) {
+          const pdf = await pdfjsLib.getDocument(url).promise, page = await pdf.getPage(1);
+          const vp = page.getViewport({scale: 1}), scale = 640 / vp.width, v = page.getViewport({scale});
+          const off = document.createElement('canvas'); off.width = v.width; off.height = v.height;
+          await page.render({canvasContext: off.getContext('2d'), viewport: v}).promise;
+          thumbCache[url] = off;
+        }
+        const src = thumbCache[url]; c.width = src.width; c.height = src.height;
+        c.getContext('2d').drawImage(src, 0, 0); c.classList.add('ready');
+      } catch (err) { /* keep the glass placeholder */ }
+    }), {rootMargin: '200px'});
+    document.querySelectorAll('canvas[data-pdf]').forEach(c => io.observe(c));
+  }
+
+  function load(data){ files = data || []; renderChips(); render(); }
+  skeletons();
+  fetch('files.json', {cache: 'no-store'}).then(r => r.json())
+    .then(list => load(list.map((f, i) => ({ id: String(i), updated: 0, description: '', category: 'General', ...f }))))
+    .catch(err => { $('grid').innerHTML = '<div class="empty glass"><b>Could not load documents</b>' + esc(err.message || err) + '</div>'; });
+</script>
+</body>
+</html>
