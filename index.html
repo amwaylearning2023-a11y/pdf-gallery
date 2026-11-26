@@ -198,7 +198,7 @@
           <div class="meta">${f.pages ? f.pages + ' pages · ' : ''}${size(f.size)}</div>
           <div class="actions">
             <button type="button" class="btn ghost" data-view="${esc(f.id)}">👁 View</button>
-            <a class="btn solid" href="${fileUrl(f)}" download="${esc(f.file)}">⬇ Download</a>
+            <a class="btn solid" href="${fileUrl(f)}" download="${esc(f.name)}.pdf">⬇ Download</a>
           </div>
         </div>
       </article>`).join('')
@@ -209,7 +209,7 @@
   function openViewer(id){
     const f = files.find(x => x.id === id); if (!f) return;
     $('vTitle').textContent = f.name;
-    $('vDownload').href = fileUrl(f); $('vDownload').setAttribute('download', f.file);
+    $('vDownload').href = fileUrl(f); $('vDownload').setAttribute('download', f.name + '.pdf');
     $('vFrame').src = fileUrl(f) + '#view=FitH';
     $('modal').classList.add('open');
   }
