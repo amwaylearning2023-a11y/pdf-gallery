@@ -1,37 +1,24 @@
-# PDF Gallery
+# Nutrition W.I.S.E Programme – Module Library
 
-A glassmorphism gallery page for PDF modules, built as a Google Apps Script web app.
-It lists every PDF in a Google Drive folder, with search, sorting, category filters
-(from subfolder names), an in-page **View** preview and a one-click **Download** button.
+A glassmorphism PDF gallery hosted on GitHub Pages. Each module card shows a first-page
+preview, a **View** button (opens the PDF in a viewer) and a **Download** button (saves the PDF straight away).
 
 ## Files
 
-| File | What it does |
+| Path | What it is |
 | --- | --- |
-| `Code.gs` | Server side: reads the Drive folder, caches the file list, setup and admin helpers |
-| `Index.html` | The gallery page (glassmorphism UI, viewer modal, download links) |
-| `appsscript.json` | Apps Script manifest (time zone, runtime, web app settings) |
+| `index.html` | The gallery page |
+| `files.json` | The list of modules shown on the page |
+| `pdfs/` | The module PDFs |
 
-## Setup
+## Add or update a module
 
-1. Create a new project at [script.google.com](https://script.google.com) and add `Code.gs` and an HTML file named `Index`.
-2. Run `setup()` once. It creates a **PDF Gallery** folder in My Drive and links it to the app
-   (or set `CONFIG.FOLDER_ID` to use an existing folder).
-3. **Deploy → New deployment → Web app**, Execute as *Me*, choose who has access, then **Deploy**.
-4. Upload PDFs to the folder. Subfolders become category filter chips.
-5. Share the folder as **Anyone with the link → Viewer** so View and Download work without sign-in.
+1. Upload the PDF to the `pdfs/` folder (**Add file → Upload files**), named `Module N - Title.pdf`.
+2. Add an entry to `files.json`:
+   ```json
+   { "num": 7, "name": "Module 7 - Title", "file": "Module 7 - Title.pdf", "size": 1234567, "pages": 10 }
+   ```
+   `size` (bytes) and `pages` are only used for the label under each card.
+3. Commit. The site updates in about a minute.
 
-## Admin functions (run from the script editor)
-
-- `standardizeNames()`: renames PDFs to `Module N - Title.pdf` and refreshes the list.
-  Add titles for new modules in its `titles` map.
-- `clearCache()`: makes new uploads show immediately instead of within 5 minutes.
-
-After editing the code, publish it with **Deploy → Manage deployments → Edit → New version**
-so the live link picks up the change.
-
-## Settings (`CONFIG` in `Code.gs`)
-
-- `FOLDER_ID`: Drive folder to list (leave as is to use the one from `setup()`)
-- `TITLE`, `SUBTITLE`: page heading
-- `CACHE_MINUTES`: how long the file list is cached (0 = always live)
+Add `"category": "Some Group"` to entries to get filter buttons at the top of the page.
